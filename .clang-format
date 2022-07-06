@@ -1,0 +1,24 @@
+AccessModifierOffset: '-4'
+AllowShortFunctionsOnASingleLine: Inline
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+BasedOnStyle: Google
+BinPackArguments: false
+BinPackParameters: false
+BreakConstructorInitializers: BeforeComma
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+ColumnLimit: 80
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+IndentPPDirectives: None
+IndentCaseLabels: false
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex:        '^<.*\..*>'
+    Priority:     2
+  - Regex:        '^<.*>'
+    Priority:     1
+  - Regex:        '".*"'
+    Priority:     3
+Language: Cpp
