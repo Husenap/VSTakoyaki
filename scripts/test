@@ -1,0 +1,5 @@
+#! /bin/bash
+
+bash $(dirname $0)/build
+pushd .build/
+env CTEST_OUTPUT_ON_FAILURE=1 ctest . "$@"
