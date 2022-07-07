@@ -4,6 +4,9 @@
 
 #pragma once
 
+#include <atomic>
+#include <vector>
+
 #include "public.sdk/source/vst/vsteditcontroller.h"
 
 namespace ht {
@@ -48,6 +51,8 @@ public:
         Steinberg::Vst::TChar*      string,
         Steinberg::Vst::ParamValue& valueNormalized) SMTG_OVERRIDE;
 
+    Steinberg::tresult PLUGIN_API notify(Steinberg::Vst::IMessage* message);
+
     //---Interface---------
     DEFINE_INTERFACES
     // Here you can add more supported VST3 interfaces
@@ -56,6 +61,9 @@ public:
     DELEGATE_REFCOUNT(EditController)
 
     //------------------------------------------------------------------------
+    std::vector<float> mData;
+    std::atomic_bool   mHasNewData{false};
+
 protected:
 };
 

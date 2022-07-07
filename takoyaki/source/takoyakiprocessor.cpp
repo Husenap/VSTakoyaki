@@ -4,8 +4,10 @@
 
 #include "takoyakiprocessor.h"
 
-#include "base/source/fstreamer.h"
-#include "pluginterfaces/vst/ivstparameterchanges.h"
+#include <base/source/fstreamer.h>
+#include <pluginterfaces/vst/ivstparameterchanges.h>
+#include <public.sdk/source/vst/vstaudioprocessoralgo.h>
+
 #include "takoyakicids.h"
 
 using namespace Steinberg;
@@ -81,6 +83,43 @@ tresult PLUGIN_API TakoyakiProcessor::process(Vst::ProcessData& data) {
     }*/
 
     //--- Here you have to implement your processing
+    if (!(data.numInputs || data.numSamples)) return kResultOk;
+
+    const int32 numInputChannels  = data.inputs[0].numChannels;
+    const int32 numOutputChannels = data.outputs[0].numChannels;
+
+    const uint32 sampleFrameSize =
+        getSampleFramesSizeInBytes(processSetup, data.numSamples);
+    void** in  = getChannelBuffersPointer(processSetup, data.inputs[0]);
+    void** out = getChannelBuffersPointer(processSetup, data.outputs[0]);
+
+    if (data.inputs[0].silenceFlags) {
+        data.outputs[0].silenceFlags = data.inputs[0].silenceFlags;
+        for (int32 i = 0; i < numInputChannels; ++i) {
+            if (in[i] != out[i]) {
+                memset(out[i], 0, sampleFrameSize);
+            }
+        }
+        return kResultOk;
+    }
+
+    data.outputs[0].silenceFlags = 0;
+
+    for (int32 i = 0; i < numOutputChannels; ++i) {
+        int32          samples = data.numSamples;
+        Vst::Sample32* pIn     = static_cast<Vst::Sample32*>(in[0]);
+        Vst::Sample32* pOut    = static_cast<Vst::Sample32*>(out[i]);
+        while (--samples >= 0) {
+            (*pOut++) = (*pIn++);
+        }
+    }
+
+    if (IPtr<Vst::IMessage> message = owned(allocateMessage())) {
+        message->setMessageID("Data");
+        message->getAttributes()->setBinary(
+            "Data", in[0], data.numSamples * sizeof(float));
+        sendMessage(message);
+    }
 
     return kResultOk;
 }
@@ -121,5 +160,4 @@ tresult PLUGIN_API TakoyakiProcessor::getState(IBStream* state) {
     return kResultOk;
 }
 
-//------------------------------------------------------------------------
 }  // namespace ht

@@ -1,5 +1,4 @@
 message("-- External Project: vst3sdk")
-include(FetchContent)
 
 FetchContent_Declare(
   vst3sdk

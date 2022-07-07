@@ -4,7 +4,9 @@
 
 #include "takoyakicontroller.h"
 
+#include "fft.hpp"
 #include "takoyakicids.h"
+#include "window.hpp"
 
 using namespace Steinberg;
 
@@ -47,6 +49,7 @@ tresult PLUGIN_API TakoyakiController::setComponentState(IBStream* state) {
 //------------------------------------------------------------------------
 tresult PLUGIN_API TakoyakiController::setState(IBStream* state) {
     // Here you get the state of the controller
+    if (!state) return kResultFalse;
 
     return kResultTrue;
 }
@@ -55,6 +58,7 @@ tresult PLUGIN_API TakoyakiController::setState(IBStream* state) {
 tresult PLUGIN_API TakoyakiController::getState(IBStream* state) {
     // Here you are asked to deliver the state of the controller (if needed)
     // Note: the real state of your plug-in is saved in the processor
+    if (!state) return kResultFalse;
 
     return kResultTrue;
 }
@@ -64,7 +68,7 @@ IPlugView* PLUGIN_API TakoyakiController::createView(FIDString name) {
     // Here the Host wants to open your editor (if you have one)
     if (FIDStringsEqual(name, Vst::ViewType::kEditor)) {
         // create your editor here and return a IPlugView ptr of it
-        return nullptr;
+        return new Window(this);
     }
     return nullptr;
 }
@@ -95,5 +99,42 @@ tresult PLUGIN_API TakoyakiController::getParamValueByString(
         tag, string, valueNormalized);
 }
 
+template <typename T>
+int popcount(T t) {
+    int count = 0;
+    while (t) {
+        ++count;
+        t ^= (t & -t);
+    }
+    return count;
+}
 //------------------------------------------------------------------------
+tresult PLUGIN_API TakoyakiController::notify(Vst::IMessage* message) {
+    if (!message) {
+        return kInvalidArgument;
+    }
+
+    if (!mHasNewData && strcmp(message->getMessageID(), "Data") == 0) {
+        const void* data = nullptr;
+        uint32      size = 0;
+        if (message->getAttributes()->getBinary("Data", data, size) ==
+            kResultOk) {
+            mData.resize(size / sizeof(float));
+            memcpy(mData.data(), data, size);
+
+            if (popcount(mData.size()) == 1) {
+                std::vector<std::complex<float>> A(mData.begin(), mData.end());
+                ht::FFT(A);
+                for (int i = 0; i < mData.size(); ++i) {
+                    mData[i] = std::sqrt(A[i].real() * A[i].real() +
+                                         A[i].imag() * A[i].imag());
+                }
+            }
+
+            mHasNewData = true;
+        }
+    }
+
+    return kResultOk;
+}
 }  // namespace ht
