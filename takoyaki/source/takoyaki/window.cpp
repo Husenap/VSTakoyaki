@@ -8,10 +8,9 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 */
-#include <imgui-knobs/imgui-knobs.h>
-#include <imgui/imgui.h>
 
 #include "imgui_wrapper.hpp"
+#include "visualizer/visualizer.hpp"
 
 namespace ht {
 
@@ -83,95 +82,14 @@ void Window::mainLoop() {
 
     ImGuiWrapper::Initialize(mWindow);
 
+    Visualizer visualizer{mController};
+
     while (!mThread->get_stop_token().stop_requested()) {
-        static float decayRate = 0.8f;
-        static float fftLow    = 0.f;
-        static float fftMid    = 0.f;
-        static float fftHigh   = 0.f;
-
-        if (mController->mData) {
-            const auto& [rawData, fftData] = *mController->mData;
-
-            mRawData = rawData;
-
-            fftLow  = 0.f;
-            fftMid  = 0.f;
-            fftHigh = 0.f;
-
-            if (std::isnan(mFFT[0])) {
-                mFFT = fftData;
-            } else {
-                for (std::size_t i = 0; i < mFFT.size(); ++i) {
-                    float amplitude = fftData[i];
-
-                    if (amplitude > mFFT[i]) {
-                        mFFT[i] = amplitude;
-                    } else {
-                        mFFT[i] =
-                            mFFT[i] * decayRate + amplitude * (1.f - decayRate);
-                    }
-
-                    amplitude = mFFT[i];
-
-                    if (i < BufferSize / 512) {
-                        fftLow = std::max(fftLow, amplitude);
-                    } else if (i < BufferSize / 128) {
-                        fftMid = std::max(fftMid, amplitude);
-                    } else if (i < BufferSize / 4) {
-                        fftHigh = std::max(fftHigh, amplitude);
-                    }
-                }
-            }
-
-            mController->mData.request();
-        }
-
         glfwPollEvents();
 
         ImGuiWrapper::BeginFrame();
 
-        if (ImGui::Begin("FFT")) {
-            {
-                static float lowerbound = -1.f;
-                static float upperbound = 1.f;
-                ImGui::DragFloatRange2(
-                    "Bound##RawData", &lowerbound, &upperbound);
-
-                ImGui::PlotHistogram("Raw Data",
-                                     mRawData.data(),
-                                     mRawData.size(),
-                                     0,
-                                     NULL,
-                                     lowerbound,
-                                     upperbound,
-                                     ImVec2(0, 150.0f));
-            }
-
-            {
-                static float lowerbound = 0.f;
-                static float upperbound = 4.f;
-                ImGui::DragFloatRange2("Bound##FFT", &lowerbound, &upperbound);
-                ImGui::PlotHistogram("FFT",
-                                     mFFT.data(),
-                                     mFFT.size() / 16,
-                                     0,
-                                     NULL,
-                                     lowerbound,
-                                     upperbound,
-                                     ImVec2(0, 150.0f));
-            }
-            ImGuiKnobs::Knob("Decay", &decayRate, 0.f, 1.f);
-
-            ImGui::VSliderFloat(
-                "##low", ImVec2(50, 150), &fftLow, 0.0f, 1.0f, "");
-            ImGui::SameLine();
-            ImGui::VSliderFloat(
-                "##mid", ImVec2(50, 150), &fftMid, 0.0f, 1.0f, "");
-            ImGui::SameLine();
-            ImGui::VSliderFloat(
-                "##high", ImVec2(50, 150), &fftHigh, 0.0f, 1.0f, "");
-        }
-        ImGui::End();
+        visualizer.Update();
 
         ImGuiWrapper::EndFrame();
 

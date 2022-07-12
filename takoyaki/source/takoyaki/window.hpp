@@ -35,9 +35,6 @@ private:
     static inline std::atomic<Window*> mOwner{nullptr};
 
     TakoyakiController* mController{};
-
-    Buffer mRawData{};
-    Buffer mFFT{};
 };
 
 }  // namespace ht

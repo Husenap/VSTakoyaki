@@ -1,10 +1,12 @@
 set(target_name "takoyaki")
 
 smtg_add_vst3plugin(${target_name}
+    "source/takoyaki/visualizer/visualizer.cpp"
+    "source/takoyaki/visualizer/visualizer.hpp"
     "source/takoyaki/data_provider.hpp"
     "source/takoyaki/fft.hpp"
-    "source/takoyaki/imgui_wrapper.hpp"
     "source/takoyaki/imgui_wrapper.cpp"
+    "source/takoyaki/imgui_wrapper.hpp"
     "source/takoyaki/window.cpp"
     "source/takoyaki/window.hpp"
     "source/takoyakicids.h"
