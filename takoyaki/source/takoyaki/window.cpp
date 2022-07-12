@@ -170,12 +170,6 @@ void Window::mainLoop() {
             ImGui::SameLine();
             ImGui::VSliderFloat(
                 "##high", ImVec2(50, 150), &fftHigh, 0.0f, 1.0f, "");
-
-            ImGui::LabelText("Resource Path",
-                             "%s",
-                             TakoyakiController::getResourcesPath()
-                                 .generic_string()
-                                 .c_str());
         }
         ImGui::End();
 
