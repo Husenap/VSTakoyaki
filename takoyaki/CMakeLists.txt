@@ -2,6 +2,7 @@ set(target_name "takoyaki")
 
 smtg_add_vst3plugin(${target_name}
     "source/fft.hpp"
+    "source/data_provider.hpp"
     "source/takoyakicids.h"
     "source/takoyakicontroller.cpp"
     "source/takoyakicontroller.h"
@@ -35,11 +36,11 @@ smtg_target_configure_version_file(${target_name})
 
 target_sources(${target_name} PRIVATE resource/win32resource.rc)
 
-if(MSVC)
-    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${target_name})
+target_compile_definitions(${target_name} PRIVATE -DNOMINMAX)
 
-    smtg_target_set_debug_executable(${target_name}
-        "$(ProgramW6432)/Steinberg/VST3PluginTestHost/VST3PluginTestHost.exe"
-        "--pluginfolder \"$(OutDir)/\""
-    )
-endif()
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${target_name})
+
+smtg_target_set_debug_executable(${target_name}
+    "$(ProgramW6432)/Steinberg/VST3PluginTestHost/VST3PluginTestHost.exe"
+    "--pluginfolder \"$(OutDir)/\""
+)
