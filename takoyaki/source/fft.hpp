@@ -5,26 +5,36 @@
 
 namespace ht {
 
-// Todo: Implement the inplace FFT algortihm
-void FFT(std::vector<std::complex<float>> &A) {
-    const auto n = A.size();
-    if (n <= 1) return;
+static constexpr float PI = 3.1415926535898f;
 
-    std::vector<std::complex<float>> A0(n / 2), A1(n / 2);
-    for (std::size_t k = 0; k * 2 < n; ++k) {
-        A0[k] = A[2 * k];
-        A1[k] = A[2 * k + 1];
+int reverseBit(int x, int m) {
+    int ret = 0;
+    for (int k = 0; k < m; ++k) {
+        if (x & (1 << k)) ret |= 1 << (m - k - 1);
+    }
+    return ret;
+}
+
+void FFT(std::vector<std::complex<float>> &A) {
+    int m = 0;
+    while ((1 << m) < static_cast<int>(A.size())) ++m;
+
+    for (int k = 0; k < A.size(); ++k) {
+        const int rev = reverseBit(k, m);
+        if (k < rev) std::swap(A[k], A[rev]);
     }
 
-    FFT(A0);
-    FFT(A1);
-
-    for (std::size_t k = 0; k * 2 < n; ++k) {
-        static constexpr float PI = 3.1415926535898f;
-        std::complex<float>    x(std::cos(2 * PI * k / n),
-                              std::sin(2 * PI * k / n));
-        A[k]         = A0[k] + x * A1[k];
-        A[k + n / 2] = A0[k] - x * A1[k];
+    for (int n = 2; n <= A.size(); n <<= 1) {
+        for (int k = 0; 2 * k < n; ++k) {
+            const auto                a = 2.f * PI * k / n;
+            const std::complex<float> x(std::cos(a), std::sin(a));
+            for (int j = 0; j < A.size(); j += n) {
+                const auto A0k   = A[k + j];
+                const auto A1k   = A[k + j + n / 2];
+                A[k + j]         = A0k + x * A1k;
+                A[k + j + n / 2] = A0k - x * A1k;
+            }
+        }
     }
 }
 
