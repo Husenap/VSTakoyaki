@@ -1,6 +1,16 @@
 set(target_name "takoyaki")
 
 smtg_add_vst3plugin(${target_name}
+    "source/takoyaki/visualizer/graphics/gl/render_command.hpp"
+    "source/takoyaki/visualizer/graphics/gl/render_commands.hpp"
+    "source/takoyaki/visualizer/graphics/gl/render_target.cpp"
+    "source/takoyaki/visualizer/graphics/gl/render_target.hpp"
+    "source/takoyaki/visualizer/graphics/gl/shader_program.hpp"
+    "source/takoyaki/visualizer/graphics/gl/shader.hpp"
+    "source/takoyaki/visualizer/graphics/renderer.cpp"
+    "source/takoyaki/visualizer/graphics/renderer.hpp"
+    "source/takoyaki/visualizer/util/file_watcher.cpp"
+    "source/takoyaki/visualizer/util/file_watcher.hpp"
     "source/takoyaki/visualizer/visualizer.cpp"
     "source/takoyaki/visualizer/visualizer.hpp"
     "source/takoyaki/data_provider.hpp"
@@ -43,11 +53,12 @@ target_link_libraries(${target_name}
     PRIVATE
     compiler_features
     compiler_warnings
-    sdk
+    glm::glm
+    glad
+    glfw
     imgui
     imgui-knobs
-    glfw
-    glad
+    sdk
 )
 
 smtg_target_configure_version_file(${target_name})
