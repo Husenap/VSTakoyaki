@@ -16,6 +16,15 @@ smtg_add_vst3plugin(${target_name}
 
 target_include_directories(${target_name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
+target_sources(${target_name}
+    PRIVATE
+    resource/imgui.ini
+)
+smtg_target_add_plugin_resources(${target_name}
+    RESOURCES
+    "resource/imgui.ini"
+)
+
 smtg_target_add_plugin_snapshots(${target_name}
     RESOURCES
     resource/0EDA05DC31765755983A30917D83FD5F_snapshot.png
