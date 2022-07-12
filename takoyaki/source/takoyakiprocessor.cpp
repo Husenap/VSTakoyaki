@@ -4,6 +4,8 @@
 
 #include "takoyakiprocessor.h"
 
+#include <string>
+
 #include <base/source/fstreamer.h>
 #include <pluginterfaces/vst/ivstparameterchanges.h>
 #include <public.sdk/source/vst/vstaudioprocessoralgo.h>
@@ -107,18 +109,27 @@ tresult PLUGIN_API TakoyakiProcessor::process(Vst::ProcessData& data) {
 
     for (int32 i = 0; i < numOutputChannels; ++i) {
         int32          samples = data.numSamples;
-        Vst::Sample32* pIn     = static_cast<Vst::Sample32*>(in[0]);
-        Vst::Sample32* pOut    = static_cast<Vst::Sample32*>(out[i]);
+        Vst::Sample32* pIn =
+            static_cast<Vst::Sample32*>(in[std::min(i, numInputChannels - 1)]);
+        Vst::Sample32* pOut = static_cast<Vst::Sample32*>(out[i]);
         while (--samples >= 0) {
             (*pOut++) = (*pIn++);
         }
     }
 
-    if (IPtr<Vst::IMessage> message = owned(allocateMessage())) {
-        message->setMessageID("Data");
-        message->getAttributes()->setBinary(
-            "Data", in[0], data.numSamples * sizeof(float));
-        sendMessage(message);
+    mBuffer.resize(mBuffer.size() + data.numSamples);
+    memcpy(mBuffer.data() + mBuffer.size() - data.numSamples,
+           in[0],
+           data.numSamples * sizeof(float));
+
+    if (mBuffer.size() >= 1024) {
+		if (IPtr<Vst::IMessage> msg = owned(allocateMessage()); msg) {
+			msg->setMessageID("Data");
+			msg->getAttributes()->setBinary(
+				"Data", mBuffer.data(), mBuffer.size() * sizeof(float));
+			sendMessage(msg);
+            mBuffer.clear();
+		}
     }
 
     return kResultOk;

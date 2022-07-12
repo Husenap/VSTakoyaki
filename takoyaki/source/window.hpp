@@ -3,12 +3,14 @@
 #include <atomic>
 #include <optional>
 #include <thread>
+#include <filesystem>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <public.sdk/source/common/pluginview.h>
 #include <public.sdk/source/vst/vsteditcontroller.h>
 
+#include "data_provider.hpp"
 #include "takoyakicontroller.h"
 
 namespace ht {
@@ -49,7 +51,7 @@ public:
         return kResultTrue;
     }
 
-    tresult PLUGIN_API canResize() SMTG_OVERRIDE { return kResultFalse; }
+    tresult PLUGIN_API canResize() SMTG_OVERRIDE { return kResultTrue; }
     tresult PLUGIN_API checkSizeConstraint(ViewRect* /*rect*/) SMTG_OVERRIDE {
         return kResultFalse;
     }
@@ -70,7 +72,12 @@ private:
 
     TakoyakiController* mController{};
 
-    std::vector<float> mData;
+    Buffer mRawData{};
+    Buffer mFFT{};
+
+    DataProvider<std::pair<int, int>> mSize;
+
+    std::filesystem::path mResourcePath;
 };
 
 }  // namespace ht

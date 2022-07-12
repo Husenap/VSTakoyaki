@@ -4,12 +4,17 @@
 
 #pragma once
 
+#include <array>
 #include <atomic>
 #include <vector>
 
+#include "data_provider.hpp"
 #include "public.sdk/source/vst/vsteditcontroller.h"
 
 namespace ht {
+
+static constexpr std::size_t BufferSize{1 << 13};
+using Buffer = std::array<float, BufferSize>;
 
 //------------------------------------------------------------------------
 //  TakoyakiController
@@ -61,10 +66,11 @@ public:
     DELEGATE_REFCOUNT(EditController)
 
     //------------------------------------------------------------------------
-    std::vector<float> mData;
-    std::atomic_bool   mHasNewData{false};
+    DataProvider<std::pair<Buffer, Buffer>> mData;
 
 protected:
+    std::array<float, BufferSize> mCircularBuffer{};
+    std::size_t                   mBufferIndex{};
 };
 
 //------------------------------------------------------------------------

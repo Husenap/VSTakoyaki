@@ -4,6 +4,8 @@
 
 #include "takoyakicontroller.h"
 
+#include <algorithm>
+
 #include "fft.hpp"
 #include "takoyakicids.h"
 #include "window.hpp"
@@ -99,40 +101,61 @@ tresult PLUGIN_API TakoyakiController::getParamValueByString(
         tag, string, valueNormalized);
 }
 
-template <typename T>
-int popcount(T t) {
-    int count = 0;
-    while (t) {
-        ++count;
-        t ^= (t & -t);
-    }
-    return count;
-}
 //------------------------------------------------------------------------
 tresult PLUGIN_API TakoyakiController::notify(Vst::IMessage* message) {
     if (!message) {
         return kInvalidArgument;
     }
 
-    if (!mHasNewData && strcmp(message->getMessageID(), "Data") == 0) {
-        const void* data = nullptr;
-        uint32      size = 0;
-        if (message->getAttributes()->getBinary("Data", data, size) ==
+    if (strcmp(message->getMessageID(), "Data") == 0) {
+        const void* data  = nullptr;
+        uint32      bytes = 0;
+
+        if (message->getAttributes()->getBinary("Data", data, bytes) ==
             kResultOk) {
-            mData.resize(size / sizeof(float));
-            memcpy(mData.data(), data, size);
+            const uint32 numSamples = bytes / sizeof(float);
+            const float* samples    = static_cast<const float*>(data);
 
-            if (popcount(mData.size()) == 1) {
-                std::vector<std::complex<float>> A(mData.begin(), mData.end());
-                ht::FFT(A);
-                for (int i = 0; i < mData.size(); ++i) {
-                    mData[i] = std::sqrt(A[i].real() * A[i].real() +
-                                         A[i].imag() * A[i].imag());
-                }
+            for (uint32 i = 0; i < numSamples; ++i) {
+                mCircularBuffer[mBufferIndex] = samples[i];
+                mBufferIndex                  = (mBufferIndex + 1) % BufferSize;
             }
-
-            mHasNewData = true;
         }
+    }
+
+    if (!mData) {
+        auto& [rawData, fftData] = *mData;
+
+        memcpy(rawData.data(),
+               mCircularBuffer.data() + mBufferIndex,
+               (BufferSize - mBufferIndex) * sizeof(float));
+        memcpy(rawData.data() + BufferSize - mBufferIndex,
+               mCircularBuffer.data(),
+               mBufferIndex * sizeof(float));
+
+        std::vector<std::complex<float>> A(rawData.begin(), rawData.end());
+
+        // Todo: Precalculate window
+        // Todo: Add OpenMP
+        {  // Hamming Window
+            const float factor = 2 * 3.1415926535898f / (BufferSize - 1);
+            for (int i = 0; i < BufferSize; ++i) {
+                A[i] *= 0.53836f - 0.46164f * std::cosf(factor * i);
+            }
+        }
+
+        ht::FFT(A);
+
+        for (int i = 0; i < BufferSize; ++i) {
+            A[i] *= 4.f / BufferSize;
+
+            const auto re = A[i].real();
+            const auto im = A[i].imag();
+
+            fftData[i] = 20.f * std::log10f(1.f + re * re + im * im);
+        }
+
+        mData.serve();
     }
 
     return kResultOk;
