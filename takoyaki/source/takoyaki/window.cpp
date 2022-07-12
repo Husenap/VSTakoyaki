@@ -4,8 +4,10 @@
 #include <filesystem>
 #include <iostream>
 
+/*
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
+*/
 #include <imgui-knobs/imgui-knobs.h>
 #include <imgui/imgui.h>
 
@@ -34,18 +36,6 @@ tresult PLUGIN_API Window::removed() {
     return EditorView::removed();
 }
 
-tresult PLUGIN_API Window::onSize(ViewRect* newSize) {
-    if (newSize) {
-        auto& [width, height] = *mSize;
-
-        width  = std::max<int>(1, newSize->getWidth());
-        height = std::max<int>(1, newSize->getHeight());
-
-        mSize.serve();
-    }
-    return EditorView::onSize(newSize);
-}
-
 void Window::open(void* parent) {
     if (mOwner != nullptr) return;
     mOwner = this;
@@ -55,11 +45,14 @@ void Window::open(void* parent) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    /*
     glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+    */
 
-    mWindow = glfwCreateWindow(Width, Height, "VSTakoyaki", NULL, NULL);
+    mWindow = glfwCreateWindow(1600, 900, "VSTakoyaki", NULL, NULL);
 
+    /*
     HWND hWnd = glfwGetWin32Window(mWindow);
 
     SetParent(hWnd, static_cast<HWND>(parent));
@@ -68,8 +61,7 @@ void Window::open(void* parent) {
         (GetWindowLong(hWnd, GWL_STYLE) & ~WS_POPUP) | WS_CHILDWINDOW;
     SetWindowLong(hWnd, GWL_STYLE, nNewStyle);
     ShowWindow(hWnd, SW_SHOW);
-
-    setRect({0, 0, Width, Height});
+    */
 
     mThread = std::make_unique<std::jthread>([this]() { mainLoop(); });
 }
@@ -132,12 +124,6 @@ void Window::mainLoop() {
             }
 
             mController->mData.request();
-        }
-
-        if (mSize) {
-            const auto [width, height] = *mSize;
-            mSize.request();
-            glfwSetWindowSize(mWindow, width, height);
         }
 
         glfwPollEvents();

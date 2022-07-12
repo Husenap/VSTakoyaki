@@ -12,7 +12,7 @@
 
 namespace ht {
 
-static constexpr std::size_t BufferSize{1 << 13};
+static constexpr std::size_t BufferSize{1 << 11};
 using Buffer = std::array<float, BufferSize>;
 
 //------------------------------------------------------------------------

@@ -24,9 +24,11 @@ target_sources(${target_name}
     PRIVATE
     resource/imgui.ini
 )
+
 smtg_target_add_plugin_resources(${target_name}
     RESOURCES
     "resource/imgui.ini"
+    "resource/Roboto-Regular.ttf"
 )
 
 smtg_target_add_plugin_snapshots(${target_name}
@@ -50,8 +52,6 @@ smtg_target_configure_version_file(${target_name})
 target_sources(${target_name} PRIVATE resource/win32resource.rc)
 
 target_compile_definitions(${target_name} PRIVATE -DNOMINMAX)
-
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${target_name})
 
 smtg_target_set_debug_executable(${target_name}
     "$(ProgramW6432)/Steinberg/VST3PluginTestHost/VST3PluginTestHost.exe"
