@@ -6,9 +6,12 @@
 
 #include <algorithm>
 
-#include "fft.hpp"
+#include <public.sdk/source/main/moduleinit.h>
+#include <windows.h>
+
+#include "takoyaki/fft.hpp"
+#include "takoyaki/window.hpp"
 #include "takoyakicids.h"
-#include "window.hpp"
 
 using namespace Steinberg;
 
@@ -24,6 +27,14 @@ tresult PLUGIN_API TakoyakiController::initialize(FUnknown* context) {
     tresult result = EditControllerEx1::initialize(context);
     if (result != kResultOk) {
         return result;
+    }
+
+    wchar_t path[2048];
+    if (GetModuleFileNameW(Steinberg::getPlatformModuleHandle(), path, 2048) >
+        0) {
+        mResourcesPath =
+            std::filesystem::path(path).parent_path().parent_path() /
+            "Resources";
     }
 
     // Here you could register some parameters

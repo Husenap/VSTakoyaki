@@ -1,8 +1,12 @@
 set(target_name "takoyaki")
 
 smtg_add_vst3plugin(${target_name}
-    "source/fft.hpp"
-    "source/data_provider.hpp"
+    "source/takoyaki/data_provider.hpp"
+    "source/takoyaki/fft.hpp"
+    "source/takoyaki/imgui_wrapper.hpp"
+    "source/takoyaki/imgui_wrapper.cpp"
+    "source/takoyaki/window.cpp"
+    "source/takoyaki/window.hpp"
     "source/takoyakicids.h"
     "source/takoyakicontroller.cpp"
     "source/takoyakicontroller.h"
@@ -10,11 +14,11 @@ smtg_add_vst3plugin(${target_name}
     "source/takoyakiprocessor.cpp"
     "source/takoyakiprocessor.h"
     "source/version.h"
-    "source/window.cpp"
-    "source/window.hpp"
 )
 
 target_include_directories(${target_name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+
+target_include_directories(${target_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source)
 
 target_sources(${target_name}
     PRIVATE

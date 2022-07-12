@@ -5,11 +5,10 @@
 #pragma once
 
 #include <array>
-#include <atomic>
-#include <vector>
+#include <filesystem>
 
-#include "data_provider.hpp"
 #include "public.sdk/source/vst/vsteditcontroller.h"
+#include "takoyaki/data_provider.hpp"
 
 namespace ht {
 
@@ -68,9 +67,15 @@ public:
     //------------------------------------------------------------------------
     DataProvider<std::pair<Buffer, Buffer>> mData;
 
+    static const std::filesystem::path& getResourcesPath() {
+        return mResourcesPath;
+    }
+
 protected:
     std::array<float, BufferSize> mCircularBuffer{};
     std::size_t                   mBufferIndex{};
+
+    inline static std::filesystem::path mResourcesPath{};
 };
 
 //------------------------------------------------------------------------

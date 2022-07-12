@@ -3,9 +3,7 @@
 #include <atomic>
 #include <optional>
 #include <thread>
-#include <filesystem>
 
-#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <public.sdk/source/common/pluginview.h>
 #include <public.sdk/source/vst/vsteditcontroller.h>
@@ -58,9 +56,9 @@ public:
 
 protected:
 private:
-    void PLUGIN_API open(void* parent);
-    void PLUGIN_API close();
-    void PLUGIN_API mainLoop();
+    void open(void* parent);
+    void close();
+    void mainLoop();
 
     GLFWwindow*                   mWindow{};
     std::unique_ptr<std::jthread> mThread{};
@@ -76,8 +74,6 @@ private:
     Buffer mFFT{};
 
     DataProvider<std::pair<int, int>> mSize;
-
-    std::filesystem::path mResourcePath;
 };
 
 }  // namespace ht
