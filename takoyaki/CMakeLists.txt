@@ -47,13 +47,18 @@ target_link_libraries(${target_name}
     imgui
     imgui-knobs
     glfw
+    glad
 )
 
 smtg_target_configure_version_file(${target_name})
 
 target_sources(${target_name} PRIVATE resource/win32resource.rc)
 
-target_compile_definitions(${target_name} PRIVATE -DNOMINMAX)
+target_compile_definitions(${target_name}
+    PRIVATE
+    -DNOMINMAX
+    -DGLFW_INCLUDE_NONE
+)
 
 smtg_target_set_debug_executable(${target_name}
     "$(ProgramW6432)/Steinberg/VST3PluginTestHost/VST3PluginTestHost.exe"

@@ -8,6 +8,7 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 */
+#include <glad/gl.h>
 
 #include "imgui_wrapper.hpp"
 #include "visualizer/visualizer.hpp"
@@ -78,6 +79,7 @@ void Window::close() {
 
 void Window::mainLoop() {
     glfwMakeContextCurrent(mWindow);
+    gladLoadGL(static_cast<GLADloadfunc>(glfwGetProcAddress));
     glfwSwapInterval(1);
 
     ImGuiWrapper::Initialize(mWindow);

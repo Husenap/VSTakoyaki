@@ -17,5 +17,6 @@ include("thirdparty/glfw.cmake")
 include("thirdparty/imgui.cmake")
 include("thirdparty/imgui-knobs.cmake")
 include("thirdparty/vst3sdk.cmake")
+add_subdirectory("thirdparty/glad")
 
 add_subdirectory(takoyaki)
