@@ -1,4 +1,4 @@
-message("-- Fetching External Project: glm")
+message(STATUS "Fetching External Project: glm")
 
 FetchContent_Declare(
 	glm

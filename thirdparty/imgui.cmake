@@ -1,4 +1,4 @@
-message("-- Fetching External Project: imgui")
+message(STATUS "Fetching External Project: imgui")
 
 FetchContent_Declare(
   imgui
