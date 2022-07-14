@@ -1,4 +1,4 @@
-#include "window.hpp"
+#include "takoyaki_view.hpp"
 
 #include <cmath>
 #include <filesystem>
@@ -12,28 +12,29 @@
 
 namespace ht {
 
-Window::Window(TakoyakiController* controller)
+TakoyakiView::TakoyakiView(TakoyakiController* controller)
     : EditorView(controller)
     , mController(controller) {}
-Window::~Window() {}
 
-tresult PLUGIN_API Window::isPlatformTypeSupported(FIDString type) {
+TakoyakiView::~TakoyakiView() {}
+
+tresult PLUGIN_API TakoyakiView::isPlatformTypeSupported(FIDString type) {
     if (strcmp(type, kPlatformTypeHWND) == 0) {
         return kResultTrue;
     }
     return kInvalidArgument;
 }
 
-tresult PLUGIN_API Window::attached(void* parent, FIDString type) {
+tresult PLUGIN_API TakoyakiView::attached(void* parent, FIDString type) {
     open(parent);
     return EditorView::attached(parent, type);
 }
-tresult PLUGIN_API Window::removed() {
+tresult PLUGIN_API TakoyakiView::removed() {
     close();
     return EditorView::removed();
 }
 
-void Window::open(void* parent) {
+void TakoyakiView::open(void* parent) {
     if (mOwner != nullptr) return;
     mOwner = this;
 
@@ -44,7 +45,7 @@ void Window::open(void* parent) {
     mThread = std::make_unique<std::jthread>([this]() { mainLoop(); });
 }
 
-void Window::close() {
+void TakoyakiView::close() {
     if (mOwner != this) return;
     mThread->request_stop();
     mThread->join();
@@ -54,7 +55,7 @@ void Window::close() {
     mOwner = nullptr;
 }
 
-void Window::mainLoop() {
+void TakoyakiView::mainLoop() {
     glfwMakeContextCurrent(mMainWindow->GetHandle());
     gladLoadGL(static_cast<GLADloadfunc>(glfwGetProcAddress));
     glfwSwapInterval(1);

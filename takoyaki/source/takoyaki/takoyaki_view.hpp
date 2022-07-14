@@ -14,10 +14,10 @@ namespace ht {
 using namespace Steinberg;
 using namespace Steinberg::Vst;
 
-class Window : public EditorView {
+class TakoyakiView : public EditorView {
 public:
-    Window(TakoyakiController* controller);
-    ~Window();
+    TakoyakiView(TakoyakiController* controller);
+    ~TakoyakiView();
 
     tresult PLUGIN_API isPlatformTypeSupported(FIDString type) SMTG_OVERRIDE;
     tresult PLUGIN_API attached(void* parent, FIDString type) SMTG_OVERRIDE;
@@ -31,7 +31,7 @@ private:
 
     std::unique_ptr<std::jthread> mThread{};
 
-    static inline std::atomic<Window*> mOwner{nullptr};
+    static inline std::atomic<TakoyakiView*> mOwner{nullptr};
 
     TakoyakiController* mController{};
 
