@@ -196,11 +196,6 @@ public:
     void Apply() { glDrawArrays(mMode, mFirst, mCount); }
 };
 
-template <class... Ts>
-struct overloaded : Ts... {
-    using Ts::operator()...;
-};
-
 class Uniform {
     using LocationHolder =
         std::variant<Locations::FixedLocation, Locations::UniformLocation>;
