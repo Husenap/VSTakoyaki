@@ -20,6 +20,8 @@ include("thirdparty/glm.cmake")
 include("thirdparty/glfw.cmake")
 include("thirdparty/imgui.cmake")
 include("thirdparty/imgui-knobs.cmake")
+include("thirdparty/dubu-serialize.cmake")
+include("thirdparty/tinyfd.cmake")
 include("thirdparty/vst3sdk.cmake")
 
 add_subdirectory(takoyaki)
