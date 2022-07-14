@@ -1,16 +1,24 @@
 set(target_name "takoyaki")
 
-smtg_add_vst3plugin(${target_name}
+set(src_files
+    "source/takoyaki/visualizer/editor/widgets/camera.cpp"
+    "source/takoyaki/visualizer/editor/widgets/camera.hpp"
+    "source/takoyaki/visualizer/editor/widgets/widget.cpp"
+    "source/takoyaki/visualizer/editor/widgets/widget.hpp"
     "source/takoyaki/visualizer/graphics/gl/render_command.hpp"
     "source/takoyaki/visualizer/graphics/gl/render_commands.hpp"
     "source/takoyaki/visualizer/graphics/gl/render_target.cpp"
     "source/takoyaki/visualizer/graphics/gl/render_target.hpp"
     "source/takoyaki/visualizer/graphics/gl/shader_program.hpp"
     "source/takoyaki/visualizer/graphics/gl/shader.hpp"
+    "source/takoyaki/visualizer/graphics/base_window.hpp"
+    "source/takoyaki/visualizer/graphics/main_window.cpp"
+    "source/takoyaki/visualizer/graphics/main_window.hpp"
     "source/takoyaki/visualizer/graphics/renderer.cpp"
     "source/takoyaki/visualizer/graphics/renderer.hpp"
     "source/takoyaki/visualizer/util/file_watcher.cpp"
     "source/takoyaki/visualizer/util/file_watcher.hpp"
+    "source/takoyaki/visualizer/util/input.hpp"
     "source/takoyaki/visualizer/visualizer.cpp"
     "source/takoyaki/visualizer/visualizer.hpp"
     "source/takoyaki/data_provider.hpp"
@@ -28,14 +36,13 @@ smtg_add_vst3plugin(${target_name}
     "source/version.h"
 )
 
+smtg_add_vst3plugin(${target_name} ${src_files})
+
+auto_group_sources(src_files ${CMAKE_CURRENT_SOURCE_DIR})
+
 target_include_directories(${target_name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 target_include_directories(${target_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source)
-
-target_sources(${target_name}
-    PRIVATE
-    resource/imgui.ini
-)
 
 smtg_target_add_plugin_resources(${target_name}
     RESOURCES

@@ -3,11 +3,8 @@
 #include <cmath>
 #include <filesystem>
 #include <iostream>
+#include <memory>
 
-/*
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW/glfw3native.h>
-*/
 #include <glad/gl.h>
 
 #include "imgui_wrapper.hpp"
@@ -39,29 +36,10 @@ tresult PLUGIN_API Window::removed() {
 void Window::open(void* parent) {
     if (mOwner != nullptr) return;
     mOwner = this;
-    glfwInit();
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    mMainWindow = std::make_unique<MainWindow>(1600, 900, "VSTakoyaki", parent);
 
-    /*
-    glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
-    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-    */
-
-    mWindow = glfwCreateWindow(1600, 900, "VSTakoyaki", NULL, NULL);
-
-    /*
-    HWND hWnd = glfwGetWin32Window(mWindow);
-
-    SetParent(hWnd, static_cast<HWND>(parent));
-
-    const LONG nNewStyle =
-        (GetWindowLong(hWnd, GWL_STYLE) & ~WS_POPUP) | WS_CHILDWINDOW;
-    SetWindowLong(hWnd, GWL_STYLE, nNewStyle);
-    ShowWindow(hWnd, SW_SHOW);
-    */
+    setRect({0, 0, 1600, 900});
 
     mThread = std::make_unique<std::jthread>([this]() { mainLoop(); });
 }
@@ -72,30 +50,29 @@ void Window::close() {
     mThread->join();
     mThread.reset();
 
-    glfwDestroyWindow(mWindow);
-    glfwTerminate();
+    mMainWindow.reset();
     mOwner = nullptr;
 }
 
 void Window::mainLoop() {
-    glfwMakeContextCurrent(mWindow);
+    glfwMakeContextCurrent(mMainWindow->GetHandle());
     gladLoadGL(static_cast<GLADloadfunc>(glfwGetProcAddress));
     glfwSwapInterval(1);
 
-    ImGuiWrapper::Initialize(mWindow);
+    ImGuiWrapper::Initialize(mMainWindow->GetHandle());
 
-    Visualizer visualizer{mController};
+    auto visualizer = std::make_unique<Visualizer>(mController);
 
     while (!mThread->get_stop_token().stop_requested()) {
-        glfwPollEvents();
+        mMainWindow->PollEvents();
 
         ImGuiWrapper::BeginFrame();
 
-        visualizer.Update();
+        visualizer->Update();
 
         ImGuiWrapper::EndFrame();
 
-        glfwSwapBuffers(mWindow);
+        mMainWindow->SwapBuffers();
     }
 
     ImGuiWrapper::Destroy();

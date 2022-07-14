@@ -4,8 +4,17 @@
 #include <imgui/imgui.h>
 
 namespace ht {
+Visualizer::Visualizer(TakoyakiController* controller)
+    : mController(controller) {}
 
 void Visualizer::Update() {
+    static float time        = static_cast<float>(glfwGetTime());
+    static float elapsedTime = 0.f;
+
+    const float currentTime = static_cast<float>(glfwGetTime());
+    const float deltaTime   = currentTime - time;
+    time                    = currentTime;
+
     if (mController->mData) {
         const auto& [rawData, fftData] = *mController->mData;
 
@@ -82,6 +91,10 @@ void Visualizer::Update() {
             "##high", ImVec2(50, 150), &fftHigh, 0.0f, 1.0f, "");
     }
     ImGui::End();
+
+    mCamera.Update(deltaTime);
+
+    mFileWatcher.Flush();
 }
 
 }  // namespace ht

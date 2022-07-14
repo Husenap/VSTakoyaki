@@ -4,11 +4,11 @@
 #include <optional>
 #include <thread>
 
-#include <GLFW/glfw3.h>
 #include <public.sdk/source/common/pluginview.h>
 #include <public.sdk/source/vst/vsteditcontroller.h>
 
 #include "takoyakicontroller.h"
+#include "visualizer/graphics/main_window.hpp"
 
 namespace ht {
 using namespace Steinberg;
@@ -29,12 +29,13 @@ private:
     void close();
     void mainLoop();
 
-    GLFWwindow*                   mWindow{};
     std::unique_ptr<std::jthread> mThread{};
 
     static inline std::atomic<Window*> mOwner{nullptr};
 
     TakoyakiController* mController{};
+
+    std::unique_ptr<MainWindow> mMainWindow{};
 };
 
 }  // namespace ht
