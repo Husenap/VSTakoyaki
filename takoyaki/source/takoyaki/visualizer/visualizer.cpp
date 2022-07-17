@@ -42,9 +42,9 @@ void Visualizer::Update() {
             }
         }
 
-        fftLow *= amplifier;
-        fftMid *= amplifier;
-        fftHigh *= amplifier;
+        fftLow *= sensitivity;
+        fftMid *= sensitivity;
+        fftHigh *= sensitivity;
 
         mController->mData.request();
     }
@@ -80,7 +80,7 @@ void Visualizer::Update() {
         }
         ImGuiKnobs::Knob("Decay", &decayRate, 0.f, 1.f);
         ImGui::SameLine();
-        ImGuiKnobs::Knob("Amp", &amplifier, 0.f, 10.f);
+        ImGuiKnobs::Knob("Sensitivity", &sensitivity, 0.f, 10.f);
 
         ImGui::VSliderFloat("##low", ImVec2(50, 150), &fftLow, 0.0f, 1.0f, "");
         ImGui::SameLine();

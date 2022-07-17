@@ -20,11 +20,11 @@ private:
     Buffer mRawData{};
     Buffer mFFT{};
 
-    static inline float decayRate = 0.8f;
-    static inline float amplifier = 1.f;
-    static inline float fftLow    = 0.f;
-    static inline float fftMid    = 0.f;
-    static inline float fftHigh   = 0.f;
+    static inline float decayRate   = 0.8f;
+    static inline float sensitivity = 1.f;
+    static inline float fftLow      = 0.f;
+    static inline float fftMid      = 0.f;
+    static inline float fftHigh     = 0.f;
 };
 
 }  // namespace ht
