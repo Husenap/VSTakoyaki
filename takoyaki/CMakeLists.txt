@@ -1,10 +1,28 @@
 set(target_name "takoyaki")
 
 set(src_files
+
+    # widgets
     "source/takoyaki/visualizer/editor/widgets/camera.cpp"
     "source/takoyaki/visualizer/editor/widgets/camera.hpp"
+    "source/takoyaki/visualizer/editor/widgets/preview.cpp"
+    "source/takoyaki/visualizer/editor/widgets/preview.hpp"
+    "source/takoyaki/visualizer/editor/widgets/uniform_item.hpp"
+    "source/takoyaki/visualizer/editor/widgets/uniforms_menu.cpp"
+    "source/takoyaki/visualizer/editor/widgets/uniforms_menu.hpp"
     "source/takoyaki/visualizer/editor/widgets/widget.cpp"
     "source/takoyaki/visualizer/editor/widgets/widget.hpp"
+
+    # editor
+    "source/takoyaki/visualizer/editor/handlers/handlers.hpp"
+    "source/takoyaki/visualizer/editor/main_editor.cpp"
+    "source/takoyaki/visualizer/editor/main_editor.hpp"
+    "source/takoyaki/visualizer/editor/service_manager.cpp"
+    "source/takoyaki/visualizer/editor/service_manager.hpp"
+    "source/takoyaki/visualizer/editor/takoyaki.cpp"
+    "source/takoyaki/visualizer/editor/takoyaki.hpp"
+
+    # graphics
     "source/takoyaki/visualizer/graphics/gl/render_command.hpp"
     "source/takoyaki/visualizer/graphics/gl/render_commands.hpp"
     "source/takoyaki/visualizer/graphics/gl/render_target.cpp"
@@ -16,17 +34,29 @@ set(src_files
     "source/takoyaki/visualizer/graphics/main_window.hpp"
     "source/takoyaki/visualizer/graphics/renderer.cpp"
     "source/takoyaki/visualizer/graphics/renderer.hpp"
+
+    # serializer
+    "source/takoyaki/visualizer/serializer/buffer.hpp"
+    "source/takoyaki/visualizer/serializer/serializer.hpp"
+
+    # util
     "source/takoyaki/visualizer/util/file_watcher.cpp"
     "source/takoyaki/visualizer/util/file_watcher.hpp"
     "source/takoyaki/visualizer/util/input.hpp"
+
+    # visualizer
     "source/takoyaki/visualizer/visualizer.cpp"
     "source/takoyaki/visualizer/visualizer.hpp"
+
+    # takoyaki
     "source/takoyaki/data_provider.hpp"
     "source/takoyaki/fft.hpp"
     "source/takoyaki/imgui_wrapper.cpp"
     "source/takoyaki/imgui_wrapper.hpp"
     "source/takoyaki/takoyaki_view.cpp"
     "source/takoyaki/takoyaki_view.hpp"
+
+    # VST
     "source/takoyakicids.h"
     "source/takoyakicontroller.cpp"
     "source/takoyakicontroller.h"
@@ -34,15 +64,16 @@ set(src_files
     "source/takoyakiprocessor.cpp"
     "source/takoyakiprocessor.h"
     "source/version.h"
+    "source/precompiled.hpp"
 )
 
 smtg_add_vst3plugin(${target_name} ${src_files})
 
-auto_group_sources(src_files ${CMAKE_CURRENT_SOURCE_DIR})
-
 target_include_directories(${target_name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-
 target_include_directories(${target_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source)
+target_precompile_headers(${target_name} PRIVATE "source/precompiled.hpp")
+
+auto_group_sources(src_files ${CMAKE_CURRENT_SOURCE_DIR})
 
 smtg_target_add_plugin_resources(${target_name}
     RESOURCES
@@ -65,6 +96,7 @@ target_link_libraries(${target_name}
     glfw
     imgui
     imgui-knobs
+    tinyfd
     sdk
 )
 

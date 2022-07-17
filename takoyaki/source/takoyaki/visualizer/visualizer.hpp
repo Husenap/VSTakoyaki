@@ -1,8 +1,6 @@
 #pragma once
 
-#include "editor/widgets/camera.hpp"
 #include "takoyakicontroller.h"
-#include "util/file_watcher.hpp"
 
 namespace ht {
 
@@ -12,20 +10,21 @@ public:
 
     void Update();
 
+    float getFFTLow() const { return fftLow; }
+    float getFFTMid() const { return fftMid; }
+    float getFFTHigh() const { return fftHigh; }
+
 private:
     TakoyakiController* mController;
-
-    FileWatcher mFileWatcher;
 
     Buffer mRawData{};
     Buffer mFFT{};
 
     static inline float decayRate = 0.8f;
+    static inline float amplifier = 1.f;
     static inline float fftLow    = 0.f;
     static inline float fftMid    = 0.f;
     static inline float fftHigh   = 0.f;
-
-    Camera mCamera;
 };
 
 }  // namespace ht

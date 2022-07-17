@@ -8,6 +8,7 @@
 #include <glad/gl.h>
 
 #include "imgui_wrapper.hpp"
+#include "visualizer/editor/service_manager.hpp"
 #include "visualizer/visualizer.hpp"
 
 namespace ht {
@@ -64,12 +65,15 @@ void TakoyakiView::mainLoop() {
 
     auto visualizer = std::make_unique<Visualizer>(mController);
 
+    ServiceManager serviceManager(*mMainWindow, *visualizer);
+
     while (!mThread->get_stop_token().stop_requested()) {
         mMainWindow->PollEvents();
 
         ImGuiWrapper::BeginFrame();
 
         visualizer->Update();
+        serviceManager.Tick();
 
         ImGuiWrapper::EndFrame();
 
