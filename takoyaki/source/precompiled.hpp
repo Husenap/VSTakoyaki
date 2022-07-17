@@ -36,7 +36,7 @@ struct overloaded : Ts... {
 #include <tinyfiledialogs.h>
 
 // takoyaki includes
-#include "takoyaki/visualizer/editor/handlers/handlers.hpp"
+#include "takoyaki/visualizer/editor/handlers.hpp"
 #include "takoyaki/visualizer/graphics/gl/render_command.hpp"
 #include "takoyaki/visualizer/graphics/gl/render_target.hpp"
 #include "takoyaki/visualizer/graphics/gl/shader.hpp"

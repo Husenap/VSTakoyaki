@@ -14,7 +14,7 @@ set(src_files
     "source/takoyaki/visualizer/editor/widgets/widget.hpp"
 
     # editor
-    "source/takoyaki/visualizer/editor/handlers/handlers.hpp"
+    "source/takoyaki/visualizer/editor/handlers.hpp"
     "source/takoyaki/visualizer/editor/main_editor.cpp"
     "source/takoyaki/visualizer/editor/main_editor.hpp"
     "source/takoyaki/visualizer/editor/service_manager.cpp"
