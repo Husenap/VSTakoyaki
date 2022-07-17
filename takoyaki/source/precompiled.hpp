@@ -32,9 +32,6 @@ struct overloaded : Ts... {
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-// dubu-serialize
-#include <dubu_serialize/dubu_serialize.hpp>
-
 // tinyfd
 #include <tinyfiledialogs.h>
 
@@ -44,5 +41,6 @@ struct overloaded : Ts... {
 #include "takoyaki/visualizer/graphics/gl/render_target.hpp"
 #include "takoyaki/visualizer/graphics/gl/shader.hpp"
 #include "takoyaki/visualizer/graphics/gl/shader_program.hpp"
+#include "takoyaki/visualizer/serializer/serializer.hpp"
 #include "takoyaki/visualizer/util/file_watcher.hpp"
 #include "takoyaki/visualizer/util/input.hpp"
