@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <iostream>
 #include <memory>
+#include <tuple>
 
 #include <glad/gl.h>
 
@@ -19,18 +20,59 @@ TakoyakiView::TakoyakiView(TakoyakiController* controller)
 
 TakoyakiView::~TakoyakiView() {}
 
-tresult PLUGIN_API TakoyakiView::isPlatformTypeSupported(FIDString type) {
+static auto translateKey(char16 key, int16 keyMsg, int16 modifiers) {
+    if (key == 0) {
+        if (keyMsg >= KEY_F1 && keyMsg <= KEY_F12) {
+            key = GLFW_KEY_F1 + (keyMsg - KEY_F1);
+        } else {
+			key = VirtualKeyCodeToChar(static_cast<uint8>(keyMsg));
+        }
+    } else if (key >= 'a' && key <= 'z') {
+        key -= 'a' - 'A';
+    }
+
+    int mods = 0;
+    if (modifiers & kShiftKey) mods |= GLFW_MOD_SHIFT;
+    if (modifiers & kAlternateKey) mods |= GLFW_MOD_ALT;
+    if (modifiers & kCommandKey) mods |= GLFW_MOD_CONTROL;
+
+    return std::make_tuple(key, keyMsg, mods);
+}
+
+tresult TakoyakiView::onKeyDown(char16 key, int16 keyMsg, int16 modifiers) {
+    if (mMainWindow) {
+        const auto [keyCode, scanCode, mods] =
+            translateKey(key, keyMsg, modifiers);
+        mMainWindow->WindowInputCallback(
+            mMainWindow->GetHandle(), keyCode, scanCode, GLFW_PRESS, mods);
+        return kResultTrue;
+    }
+    return kResultFalse;
+}
+
+tresult TakoyakiView::onKeyUp(char16 key, int16 keyMsg, int16 modifiers) {
+    if (mMainWindow) {
+        const auto [keyCode, scanCode, mods] =
+            translateKey(key, keyMsg, modifiers);
+        mMainWindow->WindowInputCallback(
+            mMainWindow->GetHandle(), keyCode, scanCode, GLFW_RELEASE, mods);
+        return kResultTrue;
+    }
+    return kResultFalse;
+}
+
+tresult TakoyakiView::isPlatformTypeSupported(FIDString type) {
     if (strcmp(type, kPlatformTypeHWND) == 0) {
         return kResultTrue;
     }
     return kInvalidArgument;
 }
 
-tresult PLUGIN_API TakoyakiView::attached(void* parent, FIDString type) {
+tresult TakoyakiView::attached(void* parent, FIDString type) {
     open(parent);
     return EditorView::attached(parent, type);
 }
-tresult PLUGIN_API TakoyakiView::removed() {
+tresult TakoyakiView::removed() {
     close();
     return EditorView::removed();
 }

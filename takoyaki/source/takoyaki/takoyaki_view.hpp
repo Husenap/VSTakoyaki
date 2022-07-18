@@ -4,6 +4,7 @@
 #include <optional>
 #include <thread>
 
+#include <pluginterfaces/base/keycodes.h>
 #include <public.sdk/source/common/pluginview.h>
 #include <public.sdk/source/vst/vsteditcontroller.h>
 
@@ -19,9 +20,12 @@ public:
     TakoyakiView(TakoyakiController* controller);
     ~TakoyakiView();
 
-    tresult PLUGIN_API isPlatformTypeSupported(FIDString type) SMTG_OVERRIDE;
-    tresult PLUGIN_API attached(void* parent, FIDString type) SMTG_OVERRIDE;
-    tresult PLUGIN_API removed() SMTG_OVERRIDE;
+    tresult isPlatformTypeSupported(FIDString type) override;
+    tresult attached(void* parent, FIDString type) override;
+    tresult removed() override;
+
+    tresult onKeyDown(char16 key, int16 keyMsg, int16 modifiers) override;
+    tresult onKeyUp(char16 key, int16 keyMsg, int16 modifiers) override;
 
 protected:
 private:
