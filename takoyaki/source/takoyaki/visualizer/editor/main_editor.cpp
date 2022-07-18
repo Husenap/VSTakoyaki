@@ -35,13 +35,6 @@ void MainEditor::Update(float         deltaTime,
             }
             ImGui::EndMenu();
         }
-        if (ImGui::BeginMenu("Edit")) {
-            if (ImGui::MenuItem("Undo", "Ctrl+Z", nullptr, false)) {
-            }
-            if (ImGui::MenuItem("Redo", "Ctrl+Shift+Z", nullptr, false)) {
-            }
-            ImGui::EndMenu();
-        }
         if (ImGui::BeginMenu("View")) {
             if (ImGui::MenuItem("Uniforms", "F1", nullptr, hasProjectLoaded)) {
                 mUniformsMenu.ToggleVisibility();
@@ -51,6 +44,9 @@ void MainEditor::Update(float         deltaTime,
             }
             if (ImGui::MenuItem("Camera", "F3", nullptr, hasProjectLoaded)) {
                 mCamera.ToggleVisibility();
+            }
+            if (ImGui::MenuItem("ImGui Demo Window", "F4")) {
+				mShowDemoWindow = !mShowDemoWindow;
             }
             ImGui::EndMenu();
         }
@@ -109,11 +105,11 @@ void MainEditor::OnInput(const MouseInput& input) {
         if (mPreview.IsHovered() && input.action == GLFW_PRESS) {
             mCameraMode = true;
             mCamera.SetActive(true);
-            if (mCameraCaptureHandler) mCameraCaptureHandler();
+            //if (mCameraCaptureHandler) mCameraCaptureHandler();
         } else if (input.action == GLFW_RELEASE) {
             mCameraMode = false;
             mCamera.SetActive(false);
-            if (mCameraReleaseHandler) mCameraReleaseHandler();
+            //if (mCameraReleaseHandler) mCameraReleaseHandler();
         }
     }
 }

@@ -99,6 +99,7 @@ void Takoyaki::Tick() {
     const float deltaTime = static_cast<float>(glfwGetTime()) - time;
     time                  = static_cast<float>(glfwGetTime());
     mCurrentTime += deltaTime;
+    demoTime += deltaTime;
 
     mEditor.Update(deltaTime, !mCurrentProject.empty(), *mRenderTarget);
 
