@@ -1,5 +1,7 @@
 #include "uniforms_menu.hpp"
 
+#include <format>
+
 static int CharacterFilter(ImGuiInputTextCallbackData* data) {
     ImWchar c        = data->EventChar;
     int     numChars = (*(int*)data->UserData);
@@ -171,11 +173,10 @@ std::string UniformsMenu::GetUniformDeclarations() {
     std::string output = "";
 
     for (const auto& uniform : mUniforms) {
-        output += "uniform ";
-        output += std::visit(GetUniformType{}, uniform.mItem);
-        output += " ";
-        output += uniform.mName;
-        output += ";\n";
+        std::format_to(std::back_inserter(output),
+                       "uniform {} {};\n",
+                       std::visit(GetUniformType{}, uniform.mItem),
+                       uniform.mName);
     }
 
     return output;
