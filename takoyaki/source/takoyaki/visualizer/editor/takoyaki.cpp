@@ -104,11 +104,11 @@ void Takoyaki::Tick() {
     mEditor.Update(deltaTime, !mCurrentProject.empty(), *mRenderTarget);
 
     mFFTLow.x = mVisualizer.getFFTLow();
-    mFFTLow.y += mFFTLow.x*deltaTime;
+    mFFTLow.y += mFFTLow.x * deltaTime;
     mFFTMid.x = mVisualizer.getFFTMid();
-    mFFTMid.y += mFFTMid.x*deltaTime;
+    mFFTMid.y += mFFTMid.x * deltaTime;
     mFFTHigh.x = mVisualizer.getFFTHigh();
-    mFFTHigh.y += mFFTHigh.x*deltaTime;
+    mFFTHigh.y += mFFTHigh.x * deltaTime;
 
     auto& cmds = mRenderer.Commands();
     cmds.Clear();

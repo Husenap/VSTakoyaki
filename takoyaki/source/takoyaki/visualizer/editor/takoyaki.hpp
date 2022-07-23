@@ -6,13 +6,13 @@ namespace ht {
 
 class Takoyaki {
 public:
-    Takoyaki(MainWindow&   window,
-             Visualizer const&   visualizer,
-             Renderer&     renderer,
-             FileWatcher&  fileWatcher,
-             MainEditor&   editor,
-             Camera&       camera,
-             UniformsMenu& uniformsMenu);
+    Takoyaki(MainWindow&       window,
+             Visualizer const& visualizer,
+             Renderer&         renderer,
+             FileWatcher&      fileWatcher,
+             MainEditor&       editor,
+             Camera&           camera,
+             UniformsMenu&     uniformsMenu);
     ~Takoyaki();
 
     void Tick();
@@ -56,13 +56,13 @@ private:
     GLint                          mFFTHighLoc;
     std::unique_ptr<RenderTarget>  mRenderTarget;
 
-    MainWindow&   mWindow;
-    Visualizer const&   mVisualizer;
-    Renderer&     mRenderer;
-    FileWatcher&  mFileWatcher;
-    MainEditor&   mEditor;
-    Camera&       mCamera;
-    UniformsMenu& mUniformsMenu;
+    MainWindow&       mWindow;
+    Visualizer const& mVisualizer;
+    Renderer&         mRenderer;
+    FileWatcher&      mFileWatcher;
+    MainEditor&       mEditor;
+    Camera&           mCamera;
+    UniformsMenu&     mUniformsMenu;
 };
 
 }  // namespace ht

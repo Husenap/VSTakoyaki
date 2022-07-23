@@ -25,7 +25,7 @@ static auto translateKey(char16 key, int16 keyMsg, int16 modifiers) {
         if (keyMsg >= KEY_F1 && keyMsg <= KEY_F12) {
             key = GLFW_KEY_F1 + (keyMsg - KEY_F1);
         } else {
-			key = VirtualKeyCodeToChar(static_cast<uint8>(keyMsg));
+            key = VirtualKeyCodeToChar(static_cast<uint8>(keyMsg));
         }
     } else if (key >= 'a' && key <= 'z') {
         key -= 'a' - 'A';

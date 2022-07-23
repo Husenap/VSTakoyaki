@@ -15,7 +15,8 @@ void Preview::Update(const RenderTarget& renderTarget) {
         const ImVec2 offset    = regionMin;
         const ImVec2 regionSize(regionMax.x - regionMin.x,
                                 regionMax.y - regionMin.y);
-        ImVec2 imageSize{static_cast<float>(renderTarget.GetSize().x), static_cast<float>(renderTarget.GetSize().y)};
+        ImVec2       imageSize{static_cast<float>(renderTarget.GetSize().x),
+                         static_cast<float>(renderTarget.GetSize().y)};
 
         const float regionRatio = regionSize.x / regionSize.y;
         const float imageRatio  = static_cast<float>(renderTarget.GetSize().x) /

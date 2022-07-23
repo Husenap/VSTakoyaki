@@ -46,7 +46,7 @@ void MainEditor::Update(float         deltaTime,
                 mCamera.ToggleVisibility();
             }
             if (ImGui::MenuItem("ImGui Demo Window", "F4")) {
-				mShowDemoWindow = !mShowDemoWindow;
+                mShowDemoWindow = !mShowDemoWindow;
             }
             ImGui::EndMenu();
         }
