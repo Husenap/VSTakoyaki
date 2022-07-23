@@ -33,8 +33,6 @@ private:
     void OnOpenFile();
     void OnSaveFile();
 
-    void OnCameraCaptureInput();
-    void OnCameraReleaseInput();
     void OnUniformsChanged();
 
     void LoadProjectFile(const char* fileToLoad);

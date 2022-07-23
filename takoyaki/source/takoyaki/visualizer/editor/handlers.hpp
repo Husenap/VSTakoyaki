@@ -10,8 +10,4 @@ using SaveFileHandler = std::function<void()>;
 // Editor handlers
 using UniformsChangedHandler = std::function<void()>;
 
-// Input handlers
-using CameraCaptureInputHandler = std::function<void()>;
-using CameraReleaseInputHandler = std::function<void()>;
-
 }  // namespace ht

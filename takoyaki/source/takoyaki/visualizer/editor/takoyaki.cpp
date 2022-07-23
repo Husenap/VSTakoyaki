@@ -194,8 +194,6 @@ void Takoyaki::SetupListeners() {
     mEditor.SetNewFileHandler([this]() { OnNewFile(); });
     mEditor.SetOpenFileHandler([this]() { OnOpenFile(); });
     mEditor.SetSaveFileHandler([this]() { OnSaveFile(); });
-    mEditor.SetCameraCaptureInputHandler([this]() { OnCameraCaptureInput(); });
-    mEditor.SetCameraReleaseInputHandler([this]() { OnCameraReleaseInput(); });
 
     mUniformsMenu.SetUniformsChangedHandler([this]() { OnUniformsChanged(); });
 }
@@ -263,14 +261,6 @@ void Takoyaki::OnSaveFile() {
     if (!mCurrentProject.empty()) {
         mUniformsMenu.SaveFile(mCurrentProject);
     }
-}
-
-void Takoyaki::OnCameraCaptureInput() {
-    mWindow.SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-}
-
-void Takoyaki::OnCameraReleaseInput() {
-    mWindow.SetInputMode(GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 void Takoyaki::LoadProjectFile(const char* fileToLoad) {

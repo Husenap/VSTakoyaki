@@ -39,12 +39,6 @@ public:
     void SetSaveFileHandler(SaveFileHandler handler) {
         mSaveFileHandler = handler;
     }
-    void SetCameraCaptureInputHandler(CameraCaptureInputHandler handler) {
-        mCameraCaptureHandler = handler;
-    }
-    void SetCameraReleaseInputHandler(CameraReleaseInputHandler handler) {
-        mCameraReleaseHandler = handler;
-    }
 
 private:
     void DisplayErrors();
@@ -63,9 +57,6 @@ private:
     OpenFileHandler mNewFileHandler;
     OpenFileHandler mOpenFileHandler;
     SaveFileHandler mSaveFileHandler;
-
-    CameraCaptureInputHandler mCameraCaptureHandler;
-    CameraReleaseInputHandler mCameraReleaseHandler;
 };
 
 }  // namespace ht

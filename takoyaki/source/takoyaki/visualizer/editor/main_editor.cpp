@@ -105,11 +105,9 @@ void MainEditor::OnInput(const MouseInput& input) {
         if (mPreview.IsHovered() && input.action == GLFW_PRESS) {
             mCameraMode = true;
             mCamera.SetActive(true);
-            //if (mCameraCaptureHandler) mCameraCaptureHandler();
         } else if (input.action == GLFW_RELEASE) {
             mCameraMode = false;
             mCamera.SetActive(false);
-            //if (mCameraReleaseHandler) mCameraReleaseHandler();
         }
     }
 }
@@ -125,8 +123,8 @@ void MainEditor::OnFramebufferSize(const glm::ivec2& size) {
 }
 
 void MainEditor::ReportError(const std::string& message) {
-    // mErrors.emplace_back(message);
-    // tinyfd_notifyPopup("Error!", message.c_str(), "error");
+    mErrors.emplace_back(message);
+    tinyfd_notifyPopup("Error!", message.c_str(), "error");
     std::cout << message << std::endl;
 }
 
