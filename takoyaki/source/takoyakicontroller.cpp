@@ -10,7 +10,7 @@
 #include <windows.h>
 
 #include "takoyaki/fft.hpp"
-#include "takoyaki/window.hpp"
+#include "takoyaki/takoyaki_view.hpp"
 #include "takoyakicids.h"
 
 using namespace Steinberg;
@@ -81,7 +81,7 @@ IPlugView* PLUGIN_API TakoyakiController::createView(FIDString name) {
     // Here the Host wants to open your editor (if you have one)
     if (FIDStringsEqual(name, Vst::ViewType::kEditor)) {
         // create your editor here and return a IPlugView ptr of it
-        return new Window(this);
+        return new TakoyakiView(this);
     }
     return nullptr;
 }

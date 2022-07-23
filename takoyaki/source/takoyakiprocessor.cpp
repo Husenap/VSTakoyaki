@@ -97,8 +97,8 @@ tresult PLUGIN_API TakoyakiProcessor::process(Vst::ProcessData& data) {
 
     if (data.inputs[0].silenceFlags) {
         data.outputs[0].silenceFlags = data.inputs[0].silenceFlags;
-        for (int32 i = 0; i < numInputChannels; ++i) {
-            if (in[i] != out[i]) {
+        for (int32 i = 0; i < numOutputChannels; ++i) {
+            if (in[std::min(i, numInputChannels - 1)] != out[i]) {
                 memset(out[i], 0, sampleFrameSize);
             }
         }
@@ -123,13 +123,13 @@ tresult PLUGIN_API TakoyakiProcessor::process(Vst::ProcessData& data) {
            data.numSamples * sizeof(float));
 
     if (mBuffer.size() >= 1024) {
-		if (IPtr<Vst::IMessage> msg = owned(allocateMessage()); msg) {
-			msg->setMessageID("Data");
-			msg->getAttributes()->setBinary(
-				"Data", mBuffer.data(), mBuffer.size() * sizeof(float));
-			sendMessage(msg);
+        if (IPtr<Vst::IMessage> msg = owned(allocateMessage()); msg) {
+            msg->setMessageID("Data");
+            msg->getAttributes()->setBinary(
+                "Data", mBuffer.data(), mBuffer.size() * sizeof(float));
+            sendMessage(msg);
             mBuffer.clear();
-		}
+        }
     }
 
     return kResultOk;

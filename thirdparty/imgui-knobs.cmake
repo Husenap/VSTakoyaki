@@ -1,4 +1,4 @@
-message("-- Fetching External Project: imgui-knobs")
+message(STATUS "Fetching External Project: imgui-knobs")
 
 FetchContent_Declare(
   imgui-knobs

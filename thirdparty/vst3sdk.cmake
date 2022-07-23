@@ -1,4 +1,4 @@
-message("-- External Project: vst3sdk")
+message(STATUS "Fetching External Project: vst3sdk")
 
 FetchContent_Declare(
   vst3sdk

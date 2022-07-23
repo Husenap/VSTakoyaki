@@ -13,7 +13,7 @@ public:
     T&       data() { return mData; }
     T const& data() const { return mData; }
 
-    T& operator*() { return mData; }
+    T&       operator*() { return mData; }
     T const& operator*() const { return mData; }
 
     operator bool() const { return mFlag; }

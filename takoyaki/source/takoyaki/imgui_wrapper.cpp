@@ -42,9 +42,6 @@ void BeginFrame() {
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
     ImGui::DockSpaceOverViewport();
-#ifdef _DEBUG
-    ImGui::ShowDemoWindow();
-#endif
 }
 
 void EndFrame() {

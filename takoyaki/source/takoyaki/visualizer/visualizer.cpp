@@ -4,6 +4,8 @@
 #include <imgui/imgui.h>
 
 namespace ht {
+Visualizer::Visualizer(TakoyakiController* controller)
+    : mController(controller) {}
 
 void Visualizer::Update() {
     if (mController->mData) {
@@ -40,6 +42,10 @@ void Visualizer::Update() {
             }
         }
 
+        fftLow *= sensitivity;
+        fftMid *= sensitivity;
+        fftHigh *= sensitivity;
+
         mController->mData.request();
     }
 
@@ -51,7 +57,7 @@ void Visualizer::Update() {
 
             ImGui::PlotHistogram("Raw Data",
                                  mRawData.data(),
-                                 mRawData.size(),
+                                 static_cast<int>(mRawData.size()),
                                  0,
                                  NULL,
                                  lowerbound,
@@ -65,7 +71,7 @@ void Visualizer::Update() {
             ImGui::DragFloatRange2("Bound##FFT", &lowerbound, &upperbound);
             ImGui::PlotHistogram("FFT",
                                  mFFT.data(),
-                                 mFFT.size() / 16,
+                                 static_cast<int>(mFFT.size() / 16),
                                  0,
                                  NULL,
                                  lowerbound,
@@ -73,6 +79,8 @@ void Visualizer::Update() {
                                  ImVec2(0, 150.0f));
         }
         ImGuiKnobs::Knob("Decay", &decayRate, 0.f, 1.f);
+        ImGui::SameLine();
+        ImGuiKnobs::Knob("Sensitivity", &sensitivity, 0.f, 10.f);
 
         ImGui::VSliderFloat("##low", ImVec2(50, 150), &fftLow, 0.0f, 1.0f, "");
         ImGui::SameLine();
