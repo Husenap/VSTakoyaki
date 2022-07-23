@@ -123,8 +123,6 @@ void MainEditor::OnFramebufferSize(const glm::ivec2& size) {
 }
 
 void MainEditor::ReportError(const std::string& message) {
-    mErrors.emplace_back(message);
-    tinyfd_notifyPopup("Error!", message.c_str(), "error");
     std::cout << message << std::endl;
 }
 
