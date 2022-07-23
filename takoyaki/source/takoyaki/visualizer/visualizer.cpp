@@ -57,7 +57,7 @@ void Visualizer::Update() {
 
             ImGui::PlotHistogram("Raw Data",
                                  mRawData.data(),
-                                 mRawData.size(),
+                                 static_cast<int>(mRawData.size()),
                                  0,
                                  NULL,
                                  lowerbound,
@@ -71,7 +71,7 @@ void Visualizer::Update() {
             ImGui::DragFloatRange2("Bound##FFT", &lowerbound, &upperbound);
             ImGui::PlotHistogram("FFT",
                                  mFFT.data(),
-                                 mFFT.size() / 16,
+                                 static_cast<int>(mFFT.size() / 16),
                                  0,
                                  NULL,
                                  lowerbound,
